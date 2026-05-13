@@ -20,6 +20,21 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
+    
+    def validate_name(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("No se permiten nombres vacios")
+        return value
+    
+    def validate_duration_hours(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("El numero de horas tiene que ser mayor que 0")
+        return value
+    
+    def validate_price(self, value):
+        if value < 0:
+            raise serializers.ValidationError("El precio no puede ser menor que 0")
+        return value
 
 class EnrollmentSerializer(serializers.ModelSerializer):
     class Meta:
