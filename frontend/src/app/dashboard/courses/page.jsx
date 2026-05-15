@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { coursesService } from "@/services/courses.service";
+import { Pencil, CircleX } from "lucide-react"
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,6 +76,19 @@ export default function CoursesPage() {
     }
   };
 
+  const deleteCourse = async (id) => {
+    try {
+      setError("");
+      setSuccess("");
+      await coursesService.deleteCourse(id);
+      setSuccess("Curso eliminado exitosamente");
+      reset();
+      loadCourses();
+    } catch (err) {
+      setError(err.response?.data?.detail || "Error al eliminar el curso");
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -134,9 +148,9 @@ export default function CoursesPage() {
                     <p className="text-sm text-red-500">{errors.level.message}</p>
                   )}
                 </div>
-                <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Input id="is_active" type="checkbox" {...register("is_active")} />
                   <Label htmlFor="is_active">Activo</Label>
-                  <Input id="is_active" type="checkbox" {...register("is_active")}/>
                   {errors.is_active && (
                     <p className="text-sm text-red-500">{errors.is_active.message}</p>
                   )}
@@ -188,6 +202,7 @@ export default function CoursesPage() {
                         <TableHead>Nivel</TableHead>
                         <TableHead>Activo</TableHead>
                         <TableHead>Fecha Registro</TableHead>
+                        <TableHead className="px-0"></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -205,6 +220,10 @@ export default function CoursesPage() {
                           </TableCell>
                           <TableCell>
                             {new Date(course.created_at).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell className="flex items-center gap-5">
+                            <Pencil className="cursor-pointer text-muted-foreground hover:text-green-400" onClick={(e) => console.log(course.id, course)} />
+                            <CircleX className="cursor-pointer text-muted-foreground hover:text-red-700" onClick={() => deleteCourse(course.id)} />
                           </TableCell>
                         </TableRow>
                       ))}

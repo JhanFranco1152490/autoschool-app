@@ -10,4 +10,9 @@ export const coursesService = {
         const response = await api.post('/courses/', data);
         return response.data;
     },
+
+    deleteCourse: async (id) => {
+        const response = await api.delete(`/courses/${id}/`)
+        return response.data;
+    }
 };
