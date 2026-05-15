@@ -10,7 +10,7 @@ import { Form, FormCheckBox, FormInput, FormSelect } from "@/components/ui/dashb
 import { DBCard } from "@/components/ui/dashboard/dCard";
 import { DBMain } from "@/components/ui/dashboard/dMain";
 import { DBTable, DBTableActions } from "@/components/ui/dashboard/table";
-import { DialogDelete } from "@/components/ui/dialog";
+import { Dialog, DialogDelete } from "@/components/ui/dialog";
 
 const courseSchema = z.object({
   name: z.string().min(1, "El nombre es requerido"),
@@ -27,6 +27,7 @@ export default function CoursesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [updateModal, setUpdateModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
 
   const {
@@ -38,6 +39,31 @@ export default function CoursesPage() {
     resolver: zodResolver(courseSchema),
   });
 
+  const clearMessages = () => {
+    setError("")
+    setSuccess("")
+  }
+
+  const emptyForm = {
+    name: "",
+    description: "",
+    duration_hours: "",
+    price: "",
+    level: "basic",
+    is_active: false
+  }
+  
+  const displayFormModal = (mode, data) => {
+    setUpdateModal(mode)
+    if (mode) {
+      reset(data)
+      clearMessages()
+    }
+    else {
+      reset(emptyForm)
+    } 
+  }
+  
   const loadCourses = async () => {
     try {
       setIsLoading(true);
@@ -49,15 +75,14 @@ export default function CoursesPage() {
       setIsLoading(false);
     }
   };
-
+  
   useEffect(() => {
     loadCourses();
   }, []);
-
-  const onSubmit = async (data) => {
+  
+  const createCourse = async (data) => {
     try {
-      setError("");
-      setSuccess("");
+      clearMessages()
       await coursesService.createCourse(data);
       setSuccess("Curso creado exitosamente");
       reset();
@@ -66,34 +91,59 @@ export default function CoursesPage() {
       setError(err.response?.data?.detail || "Error al crear el curso");
     }
   };
-
-  const deleteCourse = async (id) => {
+  
+  const updateCourse = async (data) => {
     try {
-      setError("");
-      setSuccess("");
+      clearMessages()
+      await coursesService.updateCourse(selectedCourse.id, data);
+      setSuccess("Curso actualizado exitosamente");
+      displayFormModal(false)
+      loadCourses();
+    } catch (err) {
+      setError(err.response?.data?.detail || "Error al crear el curso");
+    }
+  }
+  const deleteCourse = async (id) => {
+    setDeleteModal(false)
+    try {
+      clearMessages()
       await coursesService.deleteCourse(id);
       setSuccess("Curso eliminado exitosamente");
-      reset();
       loadCourses();
     } catch (err) {
       setError(err.response?.data?.detail || "Error al eliminar el curso");
     }
   }
-
+  
+  const formModalInfo = {
+    false: {
+      title: "Registrar nuevo",
+      description: "Añade un nuevo curso al sistema.",
+      onSubmit: createCourse
+    },
+    true: {
+      title: "Editar curso",
+      description: "Actualiza los datos del curso",
+      onSubmit: updateCourse
+    },
+  }
+  
   return (
     <DBMain
-      title="Cursos"
-      description="Gestiona el registro de cursos."
+    title="Cursos"
+    description="Gestiona el registro de cursos."
     >
       <div className="grid gap-6 md:grid-cols-3">
-        <div className="md:col-span-1">
+        <Dialog className={`md:col-span-1 ${updateModal ? "w-full max-w-lg" : ""}`} variant="transparent" open={updateModal}>
           <Form
-            title="Registrar nuevo"
-            description="Añade un nuevo curso al sistema."
-            cancelButton={true}
-            onCancel={() => reset()}
+            title={formModalInfo[updateModal].title}
+            description={formModalInfo[updateModal].description}
+            cancelButton={updateModal}
+            onCancel={() => {
+              displayFormModal(false)
+            }}
             submitButtonText={isSubmitting ? "Guardando" : "Guardar Curso"}
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(formModalInfo[updateModal].onSubmit)}
             isSubmitting={isSubmitting}
             error={error}
             success={success}
@@ -155,7 +205,7 @@ export default function CoursesPage() {
               />
             </div>
           </Form>
-        </div>
+        </Dialog>
 
         <div className="md:col-span-2">
           <DBCard title="Listado de Cursos">
@@ -211,7 +261,10 @@ export default function CoursesPage() {
                         className: "px-0",
                         render: (value, row) => (
                           <DBTableActions
-                            onUpdate={() => console.log(row.id, row)}
+                            onUpdate={() => {
+                              displayFormModal(true, row)
+                              setSelectedCourse(row)
+                            }}
                             onDelete={() => {
                               setDeleteModal(true)
                               setSelectedCourse(row)
@@ -231,16 +284,13 @@ export default function CoursesPage() {
       </div>
 
       {deleteModal && (
-        <DialogDelete 
+        <DialogDelete
           title={"Eliminar curso"}
           message={<>
             ¿Seguro que deseas eliminar el curso "<span className="font-bold">{selectedCourse.name}</span>" ?
           </>}
           onCancel={() => setDeleteModal(false)}
-          onDelete={() => {
-            deleteCourse(selectedCourse.id)
-            setDeleteModal(false)
-          }}
+          onDelete={() => deleteCourse(selectedCourse.id)}
         />
       )}
     </DBMain>

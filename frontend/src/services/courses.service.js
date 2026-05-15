@@ -11,6 +11,11 @@ export const coursesService = {
         return response.data;
     },
 
+    updateCourse: async (id, data) => {
+        const response = await api.patch(`/courses/${id}/`, data)
+        return response.data
+    },
+
     deleteCourse: async (id) => {
         const response = await api.delete(`/courses/${id}/`)
         return response.data;

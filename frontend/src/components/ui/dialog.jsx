@@ -6,6 +6,7 @@ function Dialog({
     className,
     children,
     variant,
+    open = true,
     ...props
 }) {
 
@@ -17,10 +18,9 @@ function Dialog({
     if(!Object.keys(variants).includes(variant)) variant = "default"
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div className={open ? "fixed inset-0 z-50 flex items-center justify-center bg-black/80" : ""}>
 
             <div className={`${variants[variant]} ${className}`} {...props}>
-
                 {title && (
                     <h2 className="text-xl font-bold">
                         {title}
