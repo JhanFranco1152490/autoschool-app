@@ -6,25 +6,26 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { studentsService } from "@/services/students.service";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Form, FormInput } from "@/components/ui/dashboard/form";
 import { DBCard } from "@/components/ui/dashboard/dCard";
 import { DBMain } from "@/components/ui/dashboard/dMain";
 import { DBTable, DBTableActions } from "@/components/ui/dashboard/table";
+import { DialogDelete } from "@/components/ui/dialog";
 
 const studentSchema = z.object({
   first_name: z.string().min(1, "El nombre es requerido"),
   last_name: z.string().min(1, "El apellido es requerido"),
-  email: z.string().email("Correo electrónico inválido"),
+  email: z.email("Correo electrónico inválido"),
   phone: z.string().min(1, "El teléfono es requerido"),
 });
 
 export default function StudentsPage() {
   const [students, setStudents] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [deleteModal, setDeleteModal] = useState(false);
 
   const {
     register,
@@ -154,7 +155,10 @@ export default function StudentsPage() {
                         render: (value, row) => (
                           <DBTableActions
                             onUpdate={() => console.log(row.id, row)}
-                            onDelete={() => console.log(row.id)}
+                            onDelete={() => {
+                              setDeleteModal(true)
+                              setSelectedStudent(row)
+                            }}
                           />
                         )
                       }
@@ -168,6 +172,20 @@ export default function StudentsPage() {
           </DBCard>
         </div>
       </div>
+
+      {deleteModal && (
+        <DialogDelete
+          title={"Eliminar curso"}
+          message={<>
+            ¿Seguro que deseas eliminar al estudiante "<span className="font-bold">{selectedStudent.first_name} {selectedStudent.last_name}</span>" ?
+          </>}
+          onCancel={() => setDeleteModal(false)}
+          onDelete={() => {
+            console.log(selectedStudent.id)
+            setDeleteModal(false)
+          }}
+        />
+      )}
     </DBMain>
   );
 }

@@ -10,6 +10,7 @@ import { Form, FormCheckBox, FormInput, FormSelect } from "@/components/ui/dashb
 import { DBCard } from "@/components/ui/dashboard/dCard";
 import { DBMain } from "@/components/ui/dashboard/dMain";
 import { DBTable, DBTableActions } from "@/components/ui/dashboard/table";
+import { DialogDelete } from "@/components/ui/dialog";
 
 const courseSchema = z.object({
   name: z.string().min(1, "El nombre es requerido"),
@@ -22,9 +23,11 @@ const courseSchema = z.object({
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [deleteModal, setDeleteModal] = useState(false);
 
   const {
     register,
@@ -209,7 +212,10 @@ export default function CoursesPage() {
                         render: (value, row) => (
                           <DBTableActions
                             onUpdate={() => console.log(row.id, row)}
-                            onDelete={() => deleteCourse(row.id)}
+                            onDelete={() => {
+                              setDeleteModal(true)
+                              setSelectedCourse(row)
+                            }}
                           />
                         )
                       }
@@ -223,6 +229,20 @@ export default function CoursesPage() {
           </DBCard>
         </div>
       </div>
+
+      {deleteModal && (
+        <DialogDelete 
+          title={"Eliminar curso"}
+          message={<>
+            ¿Seguro que deseas eliminar el curso "<span className="font-bold">{selectedCourse.name}</span>" ?
+          </>}
+          onCancel={() => setDeleteModal(false)}
+          onDelete={() => {
+            deleteCourse(selectedCourse.id)
+            setDeleteModal(false)
+          }}
+        />
+      )}
     </DBMain>
   );
 }
