@@ -8,10 +8,10 @@ import { coursesService } from "@/services/courses.service";
 
 import { cn } from "@/lib/utils"
 
-import { Form, FormCheckBox, FormInput, FormSelect } from "@/components/ui/dashboard/form"
-import { DBCard } from "@/components/ui/dashboard/dCard";
-import { DBMain } from "@/components/ui/dashboard/dMain";
-import { DBTable, DBTableActions } from "@/components/ui/dashboard/table";
+import { Form, FormCheckBox, FormInput, FormSelect } from "@/components/form/form"
+import { DBCard } from "@/components/dashboard/dbcard";
+import { DBMain } from "@/components/dashboard/dbmain";
+import { DBTable, DBTableActions } from "@/components/data-display/table";
 import { Dialog, DialogDelete } from "@/components/ui/dialog";
 
 const courseSchema = z.object({
@@ -61,9 +61,8 @@ export default function CoursesPage() {
       reset(data)
       clearMessages()
     }
-    else {
-      reset(emptyForm)
-    } 
+    else reset(emptyForm)
+     
   }
   
   const loadCourses = async () => {

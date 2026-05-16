@@ -1,3 +1,4 @@
+import { CircleX, Pencil } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -5,8 +6,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import { CircleX, Pencil } from "lucide-react";
+} from "@/components/ui";
 
 function DBTable({
     columns,

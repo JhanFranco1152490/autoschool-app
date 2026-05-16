@@ -6,11 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { studentsService } from "@/services/students.service";
 
-import { Form, FormInput } from "@/components/ui/dashboard/form";
-import { DBCard } from "@/components/ui/dashboard/dCard";
-import { DBMain } from "@/components/ui/dashboard/dMain";
-import { DBTable, DBTableActions } from "@/components/ui/dashboard/table";
-import { DialogDelete } from "@/components/ui/dialog";
+import { Form, FormInput } from "@/components/form/form";
+import { DBCard } from "@/components/dashboard/dbcard";
+import { DBMain } from "@/components/dashboard/dbmain";
+import { DBTable, DBTableActions } from "@/components/data-display/table";
+import { DialogDelete } from "@/components/ui";
 
 const studentSchema = z.object({
   first_name: z.string().min(1, "El nombre es requerido"),

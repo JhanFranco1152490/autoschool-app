@@ -1,13 +1,13 @@
-import * as React from "react"
-import { Alert, AlertTitle, AlertDescription } from "../alert"
 import { AlertCircle, CheckCircle2 } from "lucide-react";
-import { Button } from "../button"
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Select } from "../select";
 
-import { cn } from "@/lib/utils"
-import { DBCard } from "./dCard";
+import { DBCard } from "../dashboard/dbcard";
+import {
+    Alert, AlertDescription, AlertTitle,
+    Button,
+    Input,
+    Label,
+    Select
+} from "@/components/ui";
 
 function Form({
     className,
@@ -33,7 +33,7 @@ function Form({
             description={description}
         >
             <form onSubmit={onSubmit} className="space-y-4">
-                
+
                 {children}
 
                 <div className="flex gap-4 justify-around">
@@ -141,4 +141,5 @@ function FormInputError({
 }
 
 
-export { Form, FormInput, FormSelect, FormCheckBox }
+export { Form, FormCheckBox, FormInput, FormSelect };
+
