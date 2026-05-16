@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils"
 import { Button } from "./button"
 
 function Dialog({
@@ -18,9 +19,9 @@ function Dialog({
     if(!Object.keys(variants).includes(variant)) variant = "default"
 
     return (
-        <div className={open ? "fixed inset-0 z-50 flex items-center justify-center bg-black/80" : ""}>
+        <div className={cn(open && "fixed inset-0 z-50 flex items-center justify-center bg-black/80")}>
 
-            <div className={`${variants[variant]} ${className}`} {...props}>
+            <div className={cn(variants[variant], className)} {...props}>
                 {title && (
                     <h2 className="text-xl font-bold">
                         {title}

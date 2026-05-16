@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { coursesService } from "@/services/courses.service";
 
+import { cn } from "@/lib/utils"
+
 import { Form, FormCheckBox, FormInput, FormSelect } from "@/components/ui/dashboard/form"
 import { DBCard } from "@/components/ui/dashboard/dCard";
 import { DBMain } from "@/components/ui/dashboard/dMain";
@@ -134,7 +136,7 @@ export default function CoursesPage() {
     description="Gestiona el registro de cursos."
     >
       <div className="grid gap-6 md:grid-cols-3">
-        <Dialog className={`md:col-span-1 ${updateModal ? "w-full max-w-lg" : ""}`} variant="transparent" open={updateModal}>
+        <Dialog className={cn("md:col-span-1", updateModal && "w-full max-w-lg")} variant="transparent" open={updateModal}>
           <Form
             title={formModalInfo[updateModal].title}
             description={formModalInfo[updateModal].description}
