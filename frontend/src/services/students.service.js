@@ -10,4 +10,14 @@ export const studentsService = {
     const response = await api.post('/students/', data);
     return response.data;
   },
+
+  updateStudent: async (id, data) => {
+    const response = await api.patch(`/students/${id}/`, data)
+    return response.data
+  },
+
+  deleteStudent: async (id) => {
+    const response = await api.delete(`/students/${id}/`)
+    return response.data;
+  }
 };

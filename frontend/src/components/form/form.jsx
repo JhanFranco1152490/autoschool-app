@@ -26,7 +26,7 @@ function Form({
     children,
     ...props
 }) {
-
+    
     return (
         <DBCard
             title={title}
@@ -106,9 +106,7 @@ function FormSelect({
             <Select id={id} {...props}>
                 {children}
             </Select>
-            {error && (
-                <p className="text-sm text-red-500">{errorMessage}</p>
-            )}
+            <FormInputError error={error} errorMessage={errorMessage}/>
         </div>
     )
 }
