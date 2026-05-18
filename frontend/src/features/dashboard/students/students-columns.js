@@ -3,11 +3,31 @@
 import { DBTableActions } from "@/components/data-display/table"
 
 function getStudentColumns({
-    onUpdate,
-    onDelete,
+    actions,
+    utils,
 }) {
     return (
         [
+            {
+                key: "photo",
+                header: "Foto",
+                className: "w-12",
+                render: (value, row) => (
+                    <>
+                        {row.profile_picture ? (
+                            <img
+                                src={utils.getProfilePictureUrl(value, row)}
+                                alt={`${row.first_name} ${row.last_name}`}
+                                className="h-8 w-8 rounded-full object-cover"
+                            />
+                        ) : (
+                            <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 text-xs font-medium">
+                                {row.first_name[0]}{row.last_name[0]}
+                            </div>
+                        )}
+                    </>
+                ),
+            },
             {
                 key: "name",
                 header: "Nombre",
@@ -36,8 +56,10 @@ function getStudentColumns({
                 className: "px-0",
                 render: (value, row) => (
                     <DBTableActions
-                        onUpdate={() => onUpdate(value, row)}
-                        onDelete={() => onDelete(value, row)}
+                        photoButton={true}
+                        onPhoto={() => actions.onPhoto(value, row)} 
+                        onUpdate={() => actions.onUpdate(value, row)}
+                        onDelete={() => actions.onDelete(value, row)}
                     />
                 )
             }

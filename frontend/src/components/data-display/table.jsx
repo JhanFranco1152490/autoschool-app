@@ -1,4 +1,4 @@
-import { CircleX, Pencil } from "lucide-react";
+import { CircleX, ImagePlus, Pencil } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -40,15 +40,20 @@ function DBTable({
 }
 
 function DBTableActions({
-    updateButton = "true",
+    photoButton = false,
+    onPhoto,
+    updateButton = true,
     onUpdate,
-    deleteButton = "true",
+    deleteButton = true,
     onDelete,
     className,
     ...props
 }) {
     return (
-        <div className={`flex items-center gap-5 ${className}`}> 
+        <div className={`flex items-center gap-5 ${className}`}>
+            {photoButton && (
+                <ImagePlus className="cursor-pointer text-muted-foreground hover:text-gray-800" onClick={onPhoto} />
+            )}
             {updateButton && (
                 <Pencil className="cursor-pointer text-muted-foreground hover:text-green-400" onClick={onUpdate} />
             )}

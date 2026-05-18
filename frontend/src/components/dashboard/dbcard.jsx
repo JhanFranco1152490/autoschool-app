@@ -2,6 +2,7 @@ import { Card, CardTitle, CardHeader, CardDescription, CardContent } from "@/com
 import { useContext } from "react"
 import { DBTable } from "../data-display/table"
 import { DialogDelete } from "../ui"
+import { UploadPictureModal } from "../students/UploadPictureModal"
 
 function DBCard({
     title,
@@ -31,12 +32,17 @@ function DBCardTable({
     onDelete,
     dialogDeleteTitle = "Eliminar",
     dialogDeleteMessage = "¿Estas seguro que quieres eliminar este dato?",
+    photoModal = false,
+    photoSelected,
+    onClose,
+    onSuccess,
     context,
 }) {
     let {
         isLoading,
         deleteModal = false,
         dashboardData,
+        handlePictureSuccess,
     } = useContext(context)
 
     return (
@@ -54,6 +60,13 @@ function DBCardTable({
                 </div>
             )}
 
+            {photoModal && (
+                <UploadPictureModal
+                    student={photoSelected}//{uploadStudent}
+                    onClose={onClose}//{() => setUploadStudent(null)}
+                    onSuccess={onSuccess}//{handlePictureSuccess}
+                />
+            )}
             {deleteModal && (
                 <DialogDelete
                     title={dialogDeleteTitle}

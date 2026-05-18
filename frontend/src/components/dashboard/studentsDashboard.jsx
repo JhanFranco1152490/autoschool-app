@@ -18,6 +18,7 @@ function StudentsPageUI() {
     selectedStudent,
     setSelectedStudent,
     updateModal,
+    displayFormModal,
     setDeleteModal,
     handleSubmit,
     isSubmitting,
@@ -25,20 +26,29 @@ function StudentsPageUI() {
     createStudent,
     updateStudent,
     deleteStudent,
-    displayFormModal,
     error,
-    success
+    success,
+    handlePictureSuccess,
+    getProfilePictureUrl,
+    uploadStudent,
+    setUploadStudent,
   } = useContext(StudentContext)
 
   //Los metodos de las acciones se deben crear en este archivo para que puedan usar el contexto
   const studentColumns = getStudentColumns({
-    onUpdate: (__, row) => {
-      displayFormModal(true, row)
-      setSelectedStudent(row)
+    actions:{
+      onUpdate: (__, row) => {
+        displayFormModal(true, row)
+        setSelectedStudent(row)
+      },
+      onDelete: (__, row) => {
+        setDeleteModal(true)
+        setSelectedStudent(row)
+      },
+      onPhoto: (__, row) => setUploadStudent(row),
     },
-    onDelete: (__, row) => {
-      setDeleteModal(true)
-      setSelectedStudent(row)
+    utils:{
+      getProfilePictureUrl: (__,row) => getProfilePictureUrl(row.profile_picture),
     },
   })
 
@@ -92,6 +102,10 @@ function StudentsPageUI() {
           dialogDeleteMessage={<>
             ¿Seguro que deseas eliminar el estudiante "<span className="font-bold">{selectedStudent?.first_name} {selectedStudent?.last_name}</span>" ?
           </>}
+          photoModal={true}
+          photoSelected={uploadStudent}
+          onClose={() => setUploadStudent(null)}
+          onSuccess={handlePictureSuccess}
           context={StudentContext}
         />
       )}

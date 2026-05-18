@@ -1,3 +1,4 @@
+import { BACKEND_ORIGIN } from "@/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -6,16 +7,16 @@ function useDashboard({
     dashboardSchema,
     dashboardDefaultForm,
     loadItems = async () => console.log("load"),
-    loadError = (err) => "Error al cargar:"+err.message,
-    createItem = async (data) => console.log("create",data),
+    loadError = (err) => "Error al cargar:" + err.message,
+    createItem = async (data) => console.log("create", data),
     createSuccess = "Creado exitosamente",
-    createError = (err) => "Error al crear:"+err.message,
-    updateItem = async (id, data) => console.log("update",id,data),
+    createError = (err) => "Error al crear:" + err.message,
+    updateItem = async (id, data) => console.log("update", id, data),
     updateSuccess = "Actualizado exitosamente",
-    updateError = (err) => "Error al actualizar"+err.message,
-    deleteItem = async (id) => console.log("delete",id),
+    updateError = (err) => "Error al actualizar" + err.message,
+    deleteItem = async (id) => console.log("delete", id),
     deleteSuccess = "Borrado exitosamente",
-    deleteError = (err) => "Error al borrar"+err.message,
+    deleteError = (err) => "Error al borrar" + err.message,
 }) {
 
     const [dashboardData, setDashboardData] = useState([]);
@@ -25,6 +26,7 @@ function useDashboard({
     const [success, setSuccess] = useState("");
     const [updateModal, setUpdateModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
+    const [uploadStudent, setUploadStudent] = useState(null);
 
     const {
         register,
@@ -39,16 +41,16 @@ function useDashboard({
         setError("")
         setSuccess("")
     }
-    
+
     const displayFormModal = (mode, data) => {
         setUpdateModal(mode)
         if (mode) {
             reset(data)
             clearMessages()
         }
-        else{
+        else {
             reset(dashboardDefaultForm)
-        } 
+        }
     }
 
     const loadData = async () => {
@@ -119,6 +121,8 @@ function useDashboard({
             deleteData,
             displayFormModal,
             deleteModal,
+            uploadStudent,
+            setUploadStudent,
         }
     )
 }

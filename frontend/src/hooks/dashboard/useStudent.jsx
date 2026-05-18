@@ -26,6 +26,22 @@ function useStudent() {
         deleteSuccess: "Estudiante eliminado exitosamente",
         deleteError: () => "Error al eliminar el estudiante",
     })
+
+    const handlePictureSuccess = (updated) => {
+        // TODO(actividad): actualizar el estado local para reflejar la nueva foto
+        // Pista: reemplaza el estudiante actualizado dentro de `students` usando su id.
+        console.log("TODO: actualizar listado con estudiante modificado", updated);
+    };
+
+    const getProfilePictureUrl = (profilePicture) => {
+        if (!profilePicture) return null;
+        if (profilePicture.startsWith("http://") || profilePicture.startsWith("https://")) {
+            return profilePicture;
+        }
+        return `${BACKEND_ORIGIN}${profilePicture}`;
+    };
+
+
     return (
         {
             selectedStudent,
@@ -34,6 +50,8 @@ function useStudent() {
             createStudent,
             updateStudent,
             deleteStudent,
+            handlePictureSuccess,
+            getProfilePictureUrl,
             ...studentDashboard
         }
     )
